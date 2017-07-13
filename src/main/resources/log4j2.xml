@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%c{1.}:%L] - %msg%n"/>
+        </Console>
+
+        <RollingRandomAccessFile name="RollingFile" fileName="./display.log"
+                                 filePattern="./$${date:yyyy-MM}/display-%d{yyyyMMdd}.log.gz">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%c{1.}:%L] - %msg%n"/>
+            <Policies>
+                <!-- 按天备份 -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>

@@ -23,9 +23,10 @@ public class JsonController {
   @RequestMapping(value = "getTpsAndNum", method = RequestMethod.GET)
   public String getTpsAndNum() {
     LOGGER.info("recv request getTpsAndNum");
-    String tps = String.valueOf(RANDOM.nextInt(10));
-    String num = String.valueOf(RANDOM.nextInt(100));
-    TpsAndNumResponse tpsAndNumResponse = new TpsAndNumResponse(tps, num);
+//    String tps = String.valueOf(RANDOM.nextInt(10));
+//    String num = String.valueOf(RANDOM.nextInt(100));
+//    TpsAndNumResponse tpsAndNumResponse = new TpsAndNumResponse(tps, num);
+    TpsAndNumResponse tpsAndNumResponse = StatsManager.getInstance().getInTpsAndNum();
     return GSON.toJson(tpsAndNumResponse);
   }
 }

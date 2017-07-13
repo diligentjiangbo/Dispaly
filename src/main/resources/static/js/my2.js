@@ -74,7 +74,7 @@ $(document).ready(function(){
         $.ajax({
             type:'get',
             //data:{},
-            url:'http://localhost:8080/getTpsAndNum',
+            url:'http://115.159.198.113:8080/getTpsAndNum',
             dataType:'json',
             success:function(json_data) {
                 //alert(data.tps)

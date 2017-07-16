@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HtmlController {
   @RequestMapping("/display")
-  public String demo() {
+  public String display() {
     return "display";
+  }
+
+  @RequestMapping("top5")
+  public String top5() {
+    return "top5";
   }
 }

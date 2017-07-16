@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -23,10 +26,25 @@ public class JsonController {
   @RequestMapping(value = "getTpsAndNum", method = RequestMethod.GET)
   public String getTpsAndNum() {
     LOGGER.info("recv request getTpsAndNum");
-//    String tps = String.valueOf(RANDOM.nextInt(10));
-//    String num = String.valueOf(RANDOM.nextInt(100));
-//    TpsAndNumResponse tpsAndNumResponse = new TpsAndNumResponse(tps, num);
-    TpsAndNumResponse tpsAndNumResponse = StatsManager.getInstance().getInTpsAndNum();
+    String tps = String.valueOf(RANDOM.nextInt(10));
+    String num = String.valueOf(RANDOM.nextInt(100));
+    TpsAndNumResponse tpsAndNumResponse = new TpsAndNumResponse(tps, num);
+    //TpsAndNumResponse tpsAndNumResponse = StatsManager.getInstance().getInTpsAndNum();
     return GSON.toJson(tpsAndNumResponse);
   }
+
+  /**
+   * 返回top5
+   */
+  @RequestMapping(value = "getTop5", method = RequestMethod.GET)
+  public String getTop5() {
+    LOGGER.info("recv request getTop5");
+    List<Top5Response> list = new ArrayList<Top5Response>();
+    for (int i = 0; i < 5; i++) {
+      list.add(new Top5Response("top5" + i, String.valueOf(RANDOM.nextInt(50))));
+    }
+    Collections.sort(list);
+    return GSON.toJson(list);
+  }
+
 }

@@ -3,8 +3,12 @@ $(document).ready(function(){
     var myChart = echarts.init(document.getElementById('one'));
 
     // 常量
-    var ONE_HOUR = 60;
+    var ONE_MINUTE = 60;
     var MAX = 2000;
+    var PERIOD = 60;
+
+    var CACHE_VALUE = 0;
+    var AVG_VALUE = 0;
 
     // 初始数据
     var data = [];
@@ -12,8 +16,8 @@ $(document).ready(function(){
     var startTps = 0;
 
     (function () {
-        var startDate = new Date(new Date().getTime() - ONE_HOUR * 1000);
-        for(var i = 0 ;i < ONE_HOUR ; i++) {
+        var startDate = new Date(new Date().getTime() - ONE_MINUTE * 1000);
+        for(var i = 0 ;i < ONE_MINUTE ; i++) {
             var date = new Date(startDate.getTime() + (i * 1000 ) );
             data.push({
                 name:date.toString(),
@@ -55,38 +59,41 @@ $(document).ready(function(){
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
 
-    // setInterval(function () {
-    //     data.shift();
-    //     var date = new Date();
-    //     console.log("time",date);
-    //     data.push({
-    //         name:date.toString(),
-    //         value:[date,Math.random()*MAX+.5|0]
-    //     });
-    //     myChart.setOption({
-    //         series: [{
-    //             data: data
-    //         }]
-    //     });
-    // }, 60000);
+    //首先拿一次数据缓存
+    $.ajax({
+        type: 'get',
+        url: 'http://localhost:8080/getTpsAndNum',
+        dataType: 'json',
+        success: function(data) {
+            console.log('hello' + data.tps);
+            CACHE_VALUE = data.tps;
+        }
+    });
 
-    setInterval(function() {
+    //一分钟拿一次数据
+    setInterval(function(){
         $.ajax({
-            type:'get',
-            //data:{},
-            url:'http://115.159.198.113:8080/getTpsAndNum',
-            dataType:'json',
-            success:function(json_data) {
-                //alert(data.tps)
-                //alert(data.num)
-                data.shift();
-                var date = new Date();
-                data.push({
-                    name:date.toString(),
-                    value:[date, json_data.tps]
-                });
-
+            type: 'get',
+            url: 'http://localhost:8080/getTpsAndNum',
+            dataType: 'json',
+            success: function(data) {
+                var newCache = data.tps;
+                console.log("newCache:" + data.tps);
+                var temp = newCache - CACHE_VALUE;
+                AVG_VALUE = temp / PERIOD;
             }
+        });
+    }, PERIOD * 1000);
+
+    //每秒钟变化一下
+    setInterval(function() {
+        data.shift();
+        var date = new Date();
+        CACHE_VALUE = parseFloat(CACHE_VALUE) + parseFloat(AVG_VALUE);
+        console.log("cache_value:" + CACHE_VALUE);
+        data.push({
+            name:date.toString(),
+            value:[date, CACHE_VALUE]
         });
         myChart.setOption({
             series:[{

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author shumpert.jiang
  * @date 2017/7/13 0013 15:59
+ * 提供接口，让python自动推过来
  */
 @RestController
 public class PushStatsController {

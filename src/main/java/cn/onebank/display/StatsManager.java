@@ -4,10 +4,8 @@ package cn.onebank.display;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author shumpert.jiang
@@ -56,12 +54,29 @@ public class StatsManager {
     return 0L;
   }
 
-  public void getTop5In() {
-
-  }
-
-  public void getTop5Out() {
-
+  public List<Top5Response> getTop5() {
+    ConcurrentHashMap<String, ConcurrentHashMap<String, StatsItem>> groupTopicMap =
+        this.statsTable.get(GROUP_GET_NUMS).getGroupTable();
+    List<Top5Response> retList = new ArrayList<Top5Response>();
+    //遍历统计
+    Set<Map.Entry<String, ConcurrentHashMap<String, StatsItem>>> entrySet = groupTopicMap.entrySet();
+    Iterator<Map.Entry<String, ConcurrentHashMap<String, StatsItem>>> it = entrySet.iterator();
+    while (it.hasNext()) {
+      Map.Entry<String, ConcurrentHashMap<String, StatsItem>> entry = it.next();
+      String groupName = entry.getKey();
+      LOGGER.info("getTop5, groupName={}", groupName);
+      double tps = 0;
+      ConcurrentHashMap<String, StatsItem> topicMap = entry.getValue();
+      for (Map.Entry<String, StatsItem> topicEntry : topicMap.entrySet()) {
+        double oneTps = Double.parseDouble(topicEntry.getValue().getTps());
+        tps += oneTps;
+      }
+      Top5Response top5Response = new Top5Response(groupName, String.valueOf(tps));
+      retList.add(top5Response);
+    }
+    //排序
+    Collections.sort(retList);
+    return retList;
   }
 
 

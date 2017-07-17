@@ -25,11 +25,11 @@ public class JsonController {
 
   @RequestMapping(value = "getTpsAndNum", method = RequestMethod.GET)
   public String getTpsAndNum() {
-    LOGGER.info("recv request getTpsAndNum");
-    String tps = String.valueOf(RANDOM.nextInt(10));
-    String num = String.valueOf(RANDOM.nextInt(100));
-    TpsAndNumResponse tpsAndNumResponse = new TpsAndNumResponse(tps, num);
-    //TpsAndNumResponse tpsAndNumResponse = StatsManager.getInstance().getInTpsAndNum();
+    LOGGER.debug("recv request getTpsAndNum");
+//    String tps = String.valueOf(RANDOM.nextInt(10));
+//    String num = String.valueOf(RANDOM.nextInt(100));
+//    TpsAndNumResponse tpsAndNumResponse = new TpsAndNumResponse(tps, num);
+    TpsAndNumResponse tpsAndNumResponse = StatsManager.getInstance().getInTpsAndNum();
     return GSON.toJson(tpsAndNumResponse);
   }
 
@@ -38,13 +38,21 @@ public class JsonController {
    */
   @RequestMapping(value = "getTop5", method = RequestMethod.GET)
   public String getTop5() {
-    LOGGER.info("recv request getTop5");
-    List<Top5Response> list = new ArrayList<Top5Response>();
-    for (int i = 0; i < 5; i++) {
-      list.add(new Top5Response("top5" + i, String.valueOf(RANDOM.nextInt(50))));
+    LOGGER.debug("recv request getTop5");
+//    List<Top5Response> list = new ArrayList<Top5Response>();
+//    for (int i = 0; i < 5; i++) {
+//      list.add(new Top5Response("top5" + i, String.valueOf(RANDOM.nextInt(50))));
+//    }
+//    Collections.sort(list);
+    List<Top5Response> list = StatsManager.getInstance().getTop5();
+    int length = 5;
+    if (list.size() < 5) {
+      length = list.size();
     }
-    Collections.sort(list);
-    return GSON.toJson(list);
+    List<Top5Response> retList = list.subList(0, length);
+    LOGGER.info("list={}", list);
+    LOGGER.info("retList={}", retList);
+    return GSON.toJson(retList);
   }
 
 }

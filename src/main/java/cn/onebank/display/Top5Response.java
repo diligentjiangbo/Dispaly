@@ -43,7 +43,7 @@ public class Top5Response implements Comparable<Top5Response> {
 
   @Override
   public int compareTo(Top5Response o) {
-    if (Long.parseLong(this.tps) >= Long.parseLong(o.tps)) {
+    if (Double.parseDouble(this.tps) >= Double.parseDouble(o.tps)) {
       return -1;
     } else {
       return 1;

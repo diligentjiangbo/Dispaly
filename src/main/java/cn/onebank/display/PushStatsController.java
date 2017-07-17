@@ -19,7 +19,7 @@ public class PushStatsController {
 
   @RequestMapping(value = "/pushStats", method = RequestMethod.POST)
   public void PushStats(@RequestBody PushStatsRequest pushStatsRequest) {
-    LOGGER.info("recv stats:{}", pushStatsRequest);
+    LOGGER.debug("recv stats:{}", pushStatsRequest);
     StatsItem statsItem = new StatsItem(pushStatsRequest.getIp(), pushStatsRequest.getSum(), pushStatsRequest.getTps(), pushStatsRequest.getTime(), pushStatsRequest.getAvgpt());
     InnerMessage innerMessage = new InnerMessage(pushStatsRequest.getPutGet(), pushStatsRequest.getTopicGroup(), statsItem);
     try {

@@ -50,8 +50,7 @@ public class JsonController {
       length = list.size();
     }
     List<Top5Response> retList = list.subList(0, length);
-    LOGGER.info("list={}", list);
-    LOGGER.info("retList={}", retList);
+
     return GSON.toJson(retList);
   }
 
